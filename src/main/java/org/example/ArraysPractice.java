@@ -153,4 +153,171 @@ public class ArraysPractice {
         }
         System.out.println();
     }
+
+    /***
+     * below question is to find out the total possible pairs in the array
+     * time complexity is O(n2) because as we have 2 nested loops in the solution
+     */
+
+    public static void printPairs(int numbers[]){
+        for (int i=0; i<numbers.length; i++){
+            for (int j=i+1; j<numbers.length; j++){
+                System.out.print(String.format("(%d,%d)",numbers[i],numbers[j]));
+            }
+            System.out.println();
+        }
+    }
+    public static void callingPrintPairs(){
+        int numbers[] = {23,13,14,15,6};
+        printPairs(numbers);
+    }
+
+    /***
+     * here we have to print subArrays from the given array
+     * time complexity here is O(n3) which is one of the worst time complexity
+     */
+
+    public static void printSubArrays(int numbers[]){
+        int totalSubArrays = 0;
+        for (int i=0; i<numbers.length; i++){
+            for (int j=i+1; j<numbers.length; j++){
+                int end = j;
+                for (int start = i; start<=end; start++){
+                    System.out.print(numbers[start] + " ");
+                }
+                totalSubArrays++;
+                System.out.println();
+            }
+            System.out.println();
+        }
+        System.out.println("Total number of sub arrays are : "+totalSubArrays);
+    }
+
+    public static void callingPrintSubArrays(){
+        int numbers[] = {12,13,15,16,18,19};
+        printSubArrays(numbers);
+    }
+
+    /***
+     * below is the problem where we have to find the maximum sum of the sub arrays in an array
+     * time complexity for the calculation of maximum sum of the sub array is O(n3) which is worst,
+     * and we can improve it but using different methods....
+     * "Brute Force"
+     */
+
+    public static int maxSumOfSubArray(int numbers[]){
+        int maxSum = Integer.MIN_VALUE;
+        for (int i=0; i<numbers.length; i++){
+            for (int j=i+1; j<numbers.length; j++){
+                int currSum = 0;
+                for (int k=i; k<=j; k++){
+                    currSum += numbers[k];
+                }
+                if (maxSum < currSum){
+                    maxSum = currSum;
+                }
+            }
+        }
+        return maxSum;
+    }
+
+    public static void callingMaxSumOfSubArray(){
+        int numbers[] = {12,13,15,16,18,19};
+        int numbers1[] = {-2,-3,4,-1,-2,1,5,-3};
+        int maxValue = maxSumOfSubArray(numbers);
+        int maxValue1 = maxSumOfSubArray(numbers1);
+        System.out.println(maxValue);
+        System.out.println(maxValue1);
+    }
+
+    /***
+     * This is a bit improvised way to solve and find the maximum sum of the sub array
+     * this method is called "Prefix Sum Approach"
+     * Time Complexity for this is O(n2) i.e optimized solution but we have more optimized solution than this
+     * which is kadane's algorithm
+     */
+
+    public static int sumOfSubArrayByPrefixSumApproach(int numbers[]){
+        int maxSum = Integer.MIN_VALUE;
+        int prefixArray[] = new int[numbers.length];
+
+        // Calculating prefix array
+        prefixArray[0] = numbers[0];
+        for (int i=1; i<numbers.length; i++){
+                prefixArray[i] = numbers[i] + prefixArray[i - 1];
+        }
+
+        for (int i =0; i<numbers.length; i++){
+            int start = i;
+            for (int j=i; j<numbers.length; j++){
+                int end = j;
+
+                int currSum = start==0 ? prefixArray[end] : prefixArray[end] - prefixArray[start-1];
+
+                if (maxSum < currSum){
+                    maxSum = currSum;
+                }
+            }
+        }
+        return maxSum;
+    }
+
+    public static void callingSumOfSubArrayByPrefixSumApproach(){
+        int numbers[] = {12,13,15,16,18,19};
+        int numbers1[] = {-2,-3,4,-1,-2,1,5,-3};
+        int maxSum = sumOfSubArrayByPrefixSumApproach(numbers);
+        int maxSum1 = sumOfSubArrayByPrefixSumApproach(numbers1);
+        System.out.println(maxSum);
+        System.out.println(maxSum1);
+    }
+
+    /***
+     * This below problem is same to find the max sum of a sub array from the given array
+     * with kadane's algorithms which is the most optimized solution for the problem
+     * kadane's : when we are adding a -ve number and a +ve, and it gives -ve result so we can take 0 as the sum
+     * ignoring the negative value...
+     *
+     * TimeComplexity is O(n)
+     */
+
+    public static int kadanes(int numbers[]){
+        int ms = Integer.MIN_VALUE;
+        int cs = 0;
+
+        boolean havePositive = false;
+        for (int i=0; i<numbers.length; i++){
+            cs = numbers[i] + cs;
+            if (cs < 0){
+                cs = 0;
+            }
+            ms = Math.max(cs,ms);
+            if (numbers[i] > 0){
+                havePositive = true;
+            }
+        }
+        /***
+         * here i want to elaborate a case where there is no positive integer in that case
+         * maximum sum should be a negative number only but here it will return 0
+         * so to handle that case writing a special case below
+         */
+        if (ms == 0 && !havePositive) {
+            ms = numbers[0];
+            for (int i = 1; i < numbers.length; i++) {
+                ms = Math.max(ms,numbers[i]);
+            }
+        }
+        return ms;
+    }
+
+    public static void callingKadanes(){
+        int numbers[] = {12,13,15,16,18,19};
+        int numbers1[] = {-2,-3,4,-1,-2,1,5,-3};
+        int numbers2[] = {-2,-3,-1,-2,-3};
+        int maxSum = kadanes(numbers);
+        int maxSum1 = kadanes(numbers1);
+        int maxSum2 = kadanes(numbers2);
+        System.out.println(maxSum);
+        System.out.println(maxSum1);
+        System.out.println(maxSum2);
+    }
 }
