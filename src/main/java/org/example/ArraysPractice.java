@@ -320,4 +320,15 @@ public class ArraysPractice {
         System.out.println(maxSum1);
         System.out.println(maxSum2);
     }
+
+    /***
+     * Trapping Rain Water :
+     * Given a non-negative integers representing an elevation map where the width of each bar is 1,
+     * compute how much water it can trap after raining
+     * arrays consists of the height of each bar
+     *
+     * height = [4,2,0,6,3,2,5]
+     * we will use and learn the concept of Auxiliary Arrays
+     */
+
 }
