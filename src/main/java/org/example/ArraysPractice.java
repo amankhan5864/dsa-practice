@@ -328,7 +328,76 @@ public class ArraysPractice {
      * arrays consists of the height of each bar
      *
      * height = [4,2,0,6,3,2,5]
-     * we will use and learn the concept of Auxiliary Arrays
+     * we will use and learn the concept of Auxiliary Arrays or helping arrays
+     * here we created 2 auxiliary or helping arrays : "left_max","right_max"
+     * time complexity is O[n]
      */
+
+    public static int rainWaterTrap(int heights[]){
+       int leftMax[] = new int[heights.length];
+       int rightMax[] = new int[heights.length];
+       int totalWaterTrap = 0;
+
+       //getting all left max
+        for (int i=0; i<heights.length; i++){
+            if (i==0){
+                leftMax[i] = heights[i];
+            } else if (i != 0){
+                leftMax[i] = Math.max(heights[i], leftMax[i-1]);
+            }
+        }
+
+        //getting all right max
+        for (int i = heights.length-1; i >= 0; i--){
+            if ( i == heights.length-1){
+                rightMax[i] = heights[i];
+            } else if (i != heights.length-1){
+                rightMax[i] = Math.max(heights[i], rightMax[i+1]);
+            }
+        }
+
+        //calculating water trap
+        for (int i=0; i<heights.length; i++){
+            int water_trap = Math.min(leftMax[i],rightMax[i]) - heights[i];
+            if (water_trap > 0){
+                totalWaterTrap += water_trap;
+            }
+        }
+
+        return totalWaterTrap;
+    }
+
+    public static void callingRainWaterTrap(){
+        int heights[] = {4,2,0,6,3,2,5};
+        int totalWaterTrap = rainWaterTrap(heights);
+        System.out.println(totalWaterTrap);
+    }
+
+    /***
+     * Buy & Sell Stocks
+     * you are given an array prices where prices[i] is the price of a given stock on the
+     * ith day. you want to maximize the profit by choosing a single day yo buy one stock
+     * and choosing the different day in the future to sell the stock.
+     * prices = [7,1,5,3,6,4]
+     */
+
+    public static int buyAndSellStocks(int prices[]){
+        int buyPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        for (int i=0; i<prices.length; i++){
+            if (buyPrice < prices[i]){
+                maxProfit = prices[i]-buyPrice > maxProfit ? prices[i]-buyPrice : maxProfit;
+            } else if(buyPrice > prices[i]){
+                buyPrice = prices[i];
+            }
+        }
+        return maxProfit;
+    }
+
+    public static void callingBuyAndSellStocks(){
+        int prices[] = {7,1,5,3,6,4};
+        int maxProfit = buyAndSellStocks(prices);
+        System.out.println(maxProfit);
+    }
 
 }
